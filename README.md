@@ -29,10 +29,13 @@ A production-ready distributed API gateway built with Java and Spring Boot, feat
 - Every protected API requires `Authorization: Bearer <token>`  
 - Custom security filter validates token
 
-### 🚦 **2. IP-Based Rate Limiting**
-- Each IP is allowed **5 requests**
-- Exceeding limit returns `429 TOO MANY REQUESTS`
-- Prevents abuse & protects microservices
+### 🚦 **2. Distributed Rate Limiting (Redis)**
+This API Gateway uses Redis to apply IP-based throttling:
+
+Limit: 5 requests per IP per 60 seconds
+Uses Redis TTL (sliding expiration window)
+Works across multiple distributed instances
+Protects downstream microservices from abuse
 
 ### ⚡ **3. Redis Caching**
 - Frequently accessed job data is cached  
@@ -72,8 +75,8 @@ Architecture Overview:
 
 Run Locally
 bash# Clone the repository
-git clone https://github.com/poonam04-taxak/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
+git clone git clone https://github.com/poonam04-taxak/Distributed-API-Gateway.git
+cd Distributed-API-Gateway
 
 # Start Redis (if not running)
 redis-server
@@ -108,11 +111,20 @@ App runs on: http://localhost:8080
 - Loads username  
 - Injects authentication into Spring Security Context  
 
-## 2️⃣ **Rate Limiting Filter**
-- Uses `ConcurrentHashMap`  
-- Stores IP → Request Count  
-- Blocks after 5 requests  
-- Returns 429 with message  
+## 2️⃣ **Distributed Rate Limiting Using Redis**
+- Fully distributed & scalable
+- Handles thousands of concurrent requests
+- No server memory overhead (stateless)
+- Sliding time window using Redis key expiration
+
+Limit:
+⏱️ 5 requests / minute per IP
+
+Benefits:
+
+- Protects API gateway from DDoS
+- Ensures fair usage
+- Works even when scaling to multiple servers
 
 ## 3️⃣ **Job Microservice**
 - Uses MySQL + JPA  
@@ -140,7 +152,7 @@ JWT Authentication Flow
 
 Project Structure
 src/
-├── main/java/com/gateway/
+├── main/java/com.security.security/
 │   ├── config/          # Security & Redis config
 │   ├── controller/      # API endpoints
 │   ├── service/         # Business logic
