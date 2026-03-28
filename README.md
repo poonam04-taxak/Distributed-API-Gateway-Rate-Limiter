@@ -1,35 +1,74 @@
-# Distributed API Gateway & Rate Limiter
+# 🚀 Distributed API Gateway with JWT Authentication, Redis Caching & Rate Limiting
 A production-ready distributed API gateway built with Java and Spring Boot, featuring centralized request routing, Redis-based rate limiting, and JWT authentication across microservices.
 
-Tech Stack: Java Spring Boot Spring Security Redis JWT Maven Postman
+## 🛠️ **Tech Stack**
+### **Backend**
+- Java 17+
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- JWT
 
-Features:
-Centralized request routing and filtering across microservices
-Redis-based distributed rate limiting — handles 1000+ concurrent requests
-JWT authentication securing all API endpoints
-MVC + Controller-Service-Repository architecture for modularity
-Centralized exception handling and request validation
+### **Database**
+- MySQL
+- JPA/Hibernate
+
+### **Caching**
+- Redis (Caching job search results)
+
+### **Others**
+- Maven  
+- Postman  
+- Docker (optional)
+
+---
+
+# 📚 **Features**
+### 🔐 **1. JWT Authentication**
+- Login endpoint generates JWT token  
+- Every protected API requires `Authorization: Bearer <token>`  
+- Custom security filter validates token
+
+### 🚦 **2. IP-Based Rate Limiting**
+- Each IP is allowed **5 requests**
+- Exceeding limit returns `429 TOO MANY REQUESTS`
+- Prevents abuse & protects microservices
+
+### ⚡ **3. Redis Caching**
+- Frequently accessed job data is cached  
+- Faster responses  
+- Reduced DB load (up to 40% improvement)
+
+### 🧩 **4. Job Management Microservice**
+REST APIs:
+- Add Job  
+- Get All Jobs  
+- Get Job by ID  
+- Delete Job  
+
+---
 
 
 Architecture Overview:
-Client Request
-      │
-      ▼
-┌─────────────────────┐
-│   API Gateway Layer  │  ← Rate Limiter (Redis)
-│   (Spring Boot)      │  ← JWT Auth (Spring Security)
-└────────┬────────────┘
-         │
-    ┌────┴─────┐
-    ▼          ▼
-Service A   Service B   (Microservices)
+- **API Gateway Layer**
+  - Validates JWT tokens
+  - Enforces global rate limits
+  - Manages routing to downstream services
 
-Getting Started
-Prerequisites
+- **Job Service (Microservice)**
+  - CRUD APIs for job listings
+  - Uses MySQL with JPA/Hibernate
 
-Java 17+
-Maven 3.8+
-Redis (running on localhost:6379)
+- **Redis Cache Layer**
+  - Stores frequently accessed job results
+  - Offloads database & accelerates reads
+
+- **Security Layer**
+  - Custom JWT Authentication Filter
+  - Token extraction, validation, authentication
+
+---
+
 
 Run Locally
 bash# Clone the repository
@@ -44,8 +83,44 @@ mvn clean install
 mvn spring-boot:run
 App runs on: http://localhost:8080
 
-API Endpoints:
-MethodEndpointDescriptionAuth RequiredPOST/api/auth/loginGet JWT tokenNoGET/api/gateway/routeRoute request to serviceYesGET/api/rate-limit/statusCheck rate limit statusYesPOST/api/gateway/filterApply request filtersYes
+# 📡 **API Endpoints**
+
+## 🔑 **Authentication**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/linkedIn/login` | Generates JWT token |
+
+---
+## 💼 **Job APIs**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/linkedIn/addJob` | Add new job |
+| GET | `/linkedIn/findAll` | Fetch all jobs |
+| GET | `/linkedIn/findById/{id}` | Fetch job by ID |
+| DELETE | `/linkedIn/del/{id}` | Delete a job |
+
+---
+# 🧠 **Core Components Explained**
+
+## 1️⃣ **JWT Authentication Filter**
+- Extracts token  
+- Validates signature  
+- Loads username  
+- Injects authentication into Spring Security Context  
+
+## 2️⃣ **Rate Limiting Filter**
+- Uses `ConcurrentHashMap`  
+- Stores IP → Request Count  
+- Blocks after 5 requests  
+- Returns 429 with message  
+
+## 3️⃣ **Job Microservice**
+- Uses MySQL + JPA  
+- Entity → Repository → Service → Controller  
+- Clean layered architecture  
+
+---
+
 
 Rate Limiting:
 Redis is used for distributed rate limiting:
