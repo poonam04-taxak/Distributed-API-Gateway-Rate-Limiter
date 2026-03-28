@@ -86,10 +86,26 @@ redis-server
 # Build & run the project
 mvn clean install
 mvn spring-boot:run
-
 App runs on: http://localhost:8080
-# 📡 **API Endpoints** ## 🔑 **Authentication** | Method | Endpoint | Description | |--------|----------|-------------| | POST | /linkedIn/login | Generates JWT token | --- ## 💼 **Job APIs** | Method | Endpoint | Description | |--------|----------|-------------| | POST | /linkedIn/addJob | Add new job | | GET | /linkedIn/findAll | Fetch all jobs | | GET | /linkedIn/findById/{id} | Fetch job by ID | | DELETE | /linkedIn/del/{id} | Delete a job |
 
+# 📡 **API Endpoints**
+
+## 🔑 **Authentication**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/linkedIn/login` | Generates JWT token |
+
+---
+
+## 💼 **Job APIs**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/linkedIn/addJob` | Add new job |
+| GET | `/linkedIn/findAll` | Fetch all jobs |
+| GET | `/linkedIn/findById/{id}` | Fetch job by ID |
+| DELETE | `/linkedIn/del/{id}` | Delete a job |
+
+---
 ### 🧠 Core Components Explained
 1️⃣ JWT Authentication Filter
 Extracts JWT from headers
