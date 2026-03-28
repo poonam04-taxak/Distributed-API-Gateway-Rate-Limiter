@@ -1,180 +1,157 @@
-# 🚀 Distributed API Gateway with JWT Authentication, Redis Caching & Rate Limiting
-A production-ready distributed API gateway built with Java and Spring Boot, featuring centralized request routing, Redis-based rate limiting, and JWT authentication across microservices.
+🚀 Distributed API Gateway with JWT Authentication, Redis Caching & Rate Limiting
 
-## 🛠️ **Tech Stack**
-### **Backend**
-- Java 17+
-- Spring Boot
-- Spring Security
-- Spring Data JPA
-- JWT
+A production-ready Distributed API Gateway built with Spring Boot, featuring centralized routing, JWT authentication, Redis caching, and distributed rate limiting.
 
-### **Database**
-- MySQL
-- JPA/Hibernate
+This project simulates a real-world backend architecture used in scalable systems such as job portals, microservices, and enterprise applications.
 
-### **Caching**
-- Redis (Caching job search results)
+🛠️ Tech Stack
+Backend
+Java 17+
+Spring Boot
+Spring Security
+Spring Data JPA
+JWT Authentication
+Database
+MySQL
+JPA / Hibernate ORM
+Caching
+Redis → Caching job search results + rate limiting
+Others
+Maven
+Postman
+Docker (Optional)
+📚 Features
+🔐 1. JWT Authentication
+/linkedIn/login generates a JWT token
 
-### **Others**
-- Maven  
-- Postman  
-- Docker (optional)
+Every protected API requires
 
----
+Authorization: Bearer <token>
+Custom JWT filter validates requests and injects authentication
+🚦 2. Distributed Rate Limiting (Redis)
 
-# 📚 **Features**
-### 🔐 **1. JWT Authentication**
-- Login endpoint generates JWT token  
-- Every protected API requires `Authorization: Bearer <token>`  
-- Custom security filter validates token
+This API Gateway implements IP-based throttling using Redis.
 
-### 🚦 **2. Distributed Rate Limiting (Redis)**
-This API Gateway uses Redis to apply IP-based throttling:
+Property	Value
+Limit	5 requests
+Time Window	60 seconds
+Redis	Used for fixed-window counters
 
-Limit: 5 requests per IP per 60 seconds
-Uses Redis TTL (sliding expiration window)
-Works across multiple distributed instances
-Protects downstream microservices from abuse
+✔ Works across multiple backend instances
+✔ Prevents abuse, flooding, DDoS-like traffic
+✔ Stateless & scalable
 
-### ⚡ **3. Redis Caching**
-- Frequently accessed job data is cached  
-- Faster responses  
-- Reduced DB load (up to 40% improvement)
+⚡ 3. Redis Caching
+Frequently fetched job listings are cached
+40–60% faster repeated calls
+Reduces MySQL load significantly
+🧩 4. Job Management Microservice
 
-### 🧩 **4. Job Management Microservice**
 REST APIs:
-- Add Job  
-- Get All Jobs  
-- Get Job by ID  
-- Delete Job  
 
----
+Add a job
+Get all jobs
+Get job by ID
+Delete a job
 
+Connected to MySQL using Spring Data JPA.
 
-Architecture Overview:
-- **API Gateway Layer**
-  - Validates JWT tokens
-  - Enforces global rate limits
-  - Manages routing to downstream services
-
-- **Job Service (Microservice)**
-  - CRUD APIs for job listings
-  - Uses MySQL with JPA/Hibernate
-
-- **Redis Cache Layer**
-  - Stores frequently accessed job results
-  - Offloads database & accelerates reads
-
-- **Security Layer**
-  - Custom JWT Authentication Filter
-  - Token extraction, validation, authentication
-
----
-
-
-Run Locally
-bash# Clone the repository
-git clone git clone https://github.com/poonam04-taxak/Distributed-API-Gateway.git
+🏗️ Architecture Overview
+🔷 API Gateway Layer
+Validates JWT tokens
+Enforces global rate limits
+Routes requests to Job microservice
+🔷 Job Service
+CRUD job operations
+MySQL + Hibernate
+🔷 Redis Layer
+Request throttling
+Response caching
+🔷 Security Layer
+Custom JWT filter
+Token decoding & validation
+▶️ Run Locally
+# Clone the repository
+git clone https://github.com/poonam04-taxak/Distributed-API-Gateway.git
 cd Distributed-API-Gateway
 
-# Start Redis (if not running)
+# Start Redis
 redis-server
 
-# Build and run
+# Build & run the project
 mvn clean install
 mvn spring-boot:run
+
 App runs on: http://localhost:8080
 
-# 📡 **API Endpoints**
+📡 API Endpoints
+🔑 Authentication
+Method	Endpoint	Description
+POST	/linkedIn/login	Generates JWT token
+💼 Job APIs
+Method	Endpoint	Description
+POST	/linkedIn/addJob	Add new job
+GET	/linkedIn/findAll	Fetch all jobs
+GET	/linkedIn/findById/{id}	Fetch job by ID
+DELETE	/linkedIn/del/{id}	Delete job
+🧠 Core Components Explained
+1️⃣ JWT Authentication Filter
+Extracts JWT from headers
+Verifies signature
+Loads user details
+Attaches auth info to SecurityContext
+2️⃣ Distributed Rate Limiting Using Redis
 
-## 🔑 **Authentication**
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/linkedIn/login` | Generates JWT token |
-
----
-## 💼 **Job APIs**
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/linkedIn/addJob` | Add new job |
-| GET | `/linkedIn/findAll` | Fetch all jobs |
-| GET | `/linkedIn/findById/{id}` | Fetch job by ID |
-| DELETE | `/linkedIn/del/{id}` | Delete a job |
-
----
-# 🧠 **Core Components Explained**
-
-## 1️⃣ **JWT Authentication Filter**
-- Extracts token  
-- Validates signature  
-- Loads username  
-- Injects authentication into Spring Security Context  
-
-## 2️⃣ **Distributed Rate Limiting Using Redis**
-- Fully distributed & scalable
-- Handles thousands of concurrent requests
-- No server memory overhead (stateless)
-- Sliding time window using Redis key expiration
+✔ Fully distributed
+✔ Sliding window via TTL
+✔ No memory stored in gateway
 
 Limit:
+
 ⏱️ 5 requests / minute per IP
 
 Benefits:
 
-- Protects API gateway from DDoS
-- Ensures fair usage
-- Works even when scaling to multiple servers
-
-## 3️⃣ **Job Microservice**
-- Uses MySQL + JPA  
-- Entity → Repository → Service → Controller  
-- Clean layered architecture  
-
----
-
-
-Rate Limiting:
-Redis is used for distributed rate limiting:
-
-Limit: 100 requests / minute per client IP
-Handles: 1000+ concurrent requests
-Strategy: Sliding window using Redis sorted sets
-
-java// Example: Rate limit check
-redisTemplate.opsForZSet().count(clientKey, windowStart, currentTime);
-
-JWT Authentication Flow
-1. POST /api/auth/login  →  Returns JWT token
-2. Add header: Authorization: Bearer <token>
-3. Gateway validates token via Spring Security filter
-4. Request routed to downstream service
-
-Project Structure
+Prevents overload
+Ensures fair usage
+Works across multiple backend instances
+3️⃣ Job Microservice
+MySQL + Spring Data JPA
+Clean layered architecture:
+Controller → Service → Repository
+📁 Project Structure
 src/
-├── main/java/com.security.security/
-│   ├── config/          # Security & Redis config
-│   ├── controller/      # API endpoints
+├── main/java/com/security/security/
+│   ├── config/          # Spring + Security + Redis Config
+│   ├── controller/      # API Gateway Endpoints
 │   ├── service/         # Business logic
-│   ├── repository/      # Data access layer
-│   ├── filter/          # JWT & rate limit filters
+│   ├── repository/      # Database layer
+│   ├── filter/          # JWT + Redis Rate Limiter Filters
 │   └── exception/       # Global exception handler
 └── resources/
-    └── application.properties
-
-Testing:
-bash# Run all tests
+    ├── application.properties
+    └── static/
+🧪 Testing
+Run Tests
 mvn test
+Test with Postman
 
-# Test with Postman
-# Import: /postman/API_Gateway_Collection.json
+Import the collection:
 
-Key Learnings:
-Implementing distributed rate limiting with Redis in a stateless architecture
-Securing microservice communication using JWT with Spring Security
-Designing scalable gateway patterns for high-concurrency scenarios
+/postman/API_Gateway_Collection.json
+🎯 Key Learnings
+Implementing distributed rate limiting with Redis
+Securing microservices using JWT
+Building scalable API gateway architecture
+Redis caching for performance improvement
+Handling high-concurrency API designs
 
-Connect:
+👤 Connect with Me:
+
 Poonam Taxak — Java Backend Developer
-LinkedIn: https://www.linkedin.com/in/poonam-taxak
-LeetCode: https://leetcode.com/poonam_taxak
+
+🔗 GitHub: https://github.com/poonam04-taxak
+
+🔗 LinkedIn: https://www.linkedin.com/in/poonam-taxak
+
+🔗 LeetCode: https://leetcode.com/poonam_taxak
