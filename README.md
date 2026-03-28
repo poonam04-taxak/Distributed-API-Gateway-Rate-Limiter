@@ -1,37 +1,39 @@
-🚀 Distributed API Gateway with JWT Authentication, Redis Caching & Rate Limiting
+# 🚀 Distributed API Gateway with JWT Authentication, Redis Caching & Rate Limiting
 
 A production-ready Distributed API Gateway built with Spring Boot, featuring centralized routing, JWT authentication, Redis caching, and distributed rate limiting.
 
 This project simulates a real-world backend architecture used in scalable systems such as job portals, microservices, and enterprise applications.
 
-🛠️ Tech Stack
-Backend
-Java 17+
-Spring Boot
-Spring Security
-Spring Data JPA
-JWT Authentication
-Database
-MySQL
-JPA / Hibernate ORM
-Caching
-Redis → Caching job search results + rate limiting
-Others
-Maven
-Postman
-Docker (Optional)
-📚 Features
-🔐 1. JWT Authentication
-/linkedIn/login generates a JWT token
+## 🛠️ **Tech Stack**
+### **Backend**
+- Java 17+
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- JWT Authentication
 
-Every protected API requires
+### **Database**
+- MySQL
+- JPA / Hibernate ORM
 
-Authorization: Bearer <token>
-Custom JWT filter validates requests and injects authentication
-🚦 2. Distributed Rate Limiting (Redis)
+### **Caching**
+- Redis → Caching job search results + rate limiting
+
+### **Others**
+- Maven
+- Postman
+- Docker (Optional)
+  
+# 📚 **Features** ### 
+🔐 **1. JWT Authentication**
+- /linkedIn/login generates a JWT token
+- Every protected API requires
+- Authorization: Bearer <token>
+- Custom JWT filter validates requests and injects authentication
+
+### 🚦 **2. Distributed Rate Limiting (Redis)**
 
 This API Gateway implements IP-based throttling using Redis.
-
 Property	Value
 Limit	5 requests
 Time Window	60 seconds
@@ -41,22 +43,23 @@ Redis	Used for fixed-window counters
 ✔ Prevents abuse, flooding, DDoS-like traffic
 ✔ Stateless & scalable
 
-⚡ 3. Redis Caching
-Frequently fetched job listings are cached
-40–60% faster repeated calls
-Reduces MySQL load significantly
-🧩 4. Job Management Microservice
+### ⚡ **3. Redis Caching**
+- Frequently fetched job listings are cached
+- 40–60% faster repeated calls
+- Reduces MySQL load significantly
+  
+### 🧩 **4. Job Management Microservice**
 
 REST APIs:
-
-Add a job
-Get all jobs
-Get job by ID
-Delete a job
+- Add a job
+- Get all jobs
+- Get job by ID
+- Delete a job
 
 Connected to MySQL using Spring Data JPA.
 
-🏗️ Architecture Overview
+### 🏗️ Architecture Overview:
+
 🔷 API Gateway Layer
 Validates JWT tokens
 Enforces global rate limits
@@ -70,7 +73,8 @@ Response caching
 🔷 Security Layer
 Custom JWT filter
 Token decoding & validation
-▶️ Run Locally
+
+### ▶️ Run Locally
 # Clone the repository
 git clone https://github.com/poonam04-taxak/Distributed-API-Gateway.git
 cd Distributed-API-Gateway
@@ -84,7 +88,7 @@ mvn spring-boot:run
 
 App runs on: http://localhost:8080
 
-📡 API Endpoints
+### 📡 API Endpoints
 🔑 Authentication
 Method	Endpoint	Description
 POST	/linkedIn/login	Generates JWT token
@@ -94,7 +98,8 @@ POST	/linkedIn/addJob	Add new job
 GET	/linkedIn/findAll	Fetch all jobs
 GET	/linkedIn/findById/{id}	Fetch job by ID
 DELETE	/linkedIn/del/{id}	Delete job
-🧠 Core Components Explained
+
+### 🧠 Core Components Explained
 1️⃣ JWT Authentication Filter
 Extracts JWT from headers
 Verifies signature
@@ -119,7 +124,8 @@ Works across multiple backend instances
 MySQL + Spring Data JPA
 Clean layered architecture:
 Controller → Service → Repository
-📁 Project Structure
+
+### 📁 Project Structure
 src/
 ├── main/java/com/security/security/
 │   ├── config/          # Spring + Security + Redis Config
@@ -136,10 +142,11 @@ Run Tests
 mvn test
 Test with Postman
 
-Import the collection:
+### Import the collection:
 
 /postman/API_Gateway_Collection.json
-🎯 Key Learnings
+
+### 🎯 Key Learnings
 Implementing distributed rate limiting with Redis
 Securing microservices using JWT
 Building scalable API gateway architecture
