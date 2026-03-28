@@ -77,9 +77,10 @@ Token decoding & validation
 ### ▶️ Run Locally
 # Clone the repository
 git clone https://github.com/poonam04-taxak/Distributed-API-Gateway.git
+
 cd Distributed-API-Gateway
 
-# Start Redis
+ Start Redis
 redis-server
 
 # Build & run the project
