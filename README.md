@@ -4,6 +4,10 @@ A production-ready Distributed API Gateway built with Spring Boot, featuring cen
 
 This project simulates a real-world backend architecture used in scalable systems such as job portals, microservices, and enterprise applications.
 
+## 📌 Architecture Diagram
+
+![Architecture](./Distributed%20API%20Gateway%20architecture%20infographic.png)
+
 ## 🛠️ **Tech Stack**
 ### **Backend**
 - Java 17+
